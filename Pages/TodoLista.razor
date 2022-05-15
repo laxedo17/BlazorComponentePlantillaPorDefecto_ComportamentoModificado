@@ -1,0 +1,49 @@
+﻿@page "/todolista"
+@using BlazorPorDefectoComportamentoModificado.Data
+
+<!--Usamos un pouco de LINQ aqui-->
+<!--Conta o numero de todos sen confirmar como terminado-->
+<h3>Faltan @todos.Count(t=> !t.IsCompletado) todo por completar</h3>
+
+<ul>
+    @foreach (var todo in todos)
+    {
+        <!--Pasamos o valor bool a un checkbox-->
+        <!--Pasamos a lista a un textbox con input-->
+        <li>
+            <input type="checkbox" @bind="todo.IsCompletado" />
+            <input @bind="todo.Titulo" />
+        </li>
+        <!--Podemos ponher arroba a todo.Titulo, todo.Completado, etc-->
+        <!--Pero ao ponhelo en bind o compilador sabe que e codigo C# e non fai falta-->
+    }
+</ul>
+
+<!--No input agregamos un binding para poder usar o valor no metodo EngadeTodo-->
+<!--Se temos texto no interior do input, bind fara 2-way binding-->
+<input placeholder="Agrega un todo" @bind="NovoTodo" />
+<!--Engadimos un event handler ao boton para que cando se lle faga click funcione-->
+<button @onclick="EngadeTodo">Engade todo</button>
+
+@code {
+    //Definimos unha lista de elementos TodoItem cos que interactuaremos
+    private List<TodoItem> todos = new();
+
+    private string NovoTodo = string.Empty;
+
+    //Engade tarefa a lista de todos
+    private void EngadeTodo()
+    {
+        if (string.IsNullOrEmpty(NovoTodo))
+        {
+            return;
+        }
+
+        todos.Add(new TodoItem { Titulo = NovoTodo });
+        //unha vez agregado o novo elemento todo
+        //vaciamos o contido do textbox
+        //para engadir outra
+        NovoTodo = string.Empty;
+    }
+
+}

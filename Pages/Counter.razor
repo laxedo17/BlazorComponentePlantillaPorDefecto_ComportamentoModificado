@@ -1,0 +1,43 @@
+﻿@page "/counter"
+@page "/counter/{ContaInicial:int}"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    //pasamos unha propiedade coa que interactuar, como un parametro parte dunha url
+    [Parameter]
+    public int ContaInicial { get; set; } = 0;
+
+    private int currentCount = 0;
+
+    //IMPORTANTE: Se necesitas compartir un parámetro fora de este componente Blazor
+    //tes que facelo public e usar [Parameter]
+    //sinon non podes usar este parametro en outra paxina que non sexa
+    //a orixinal, Counter.razor
+    [Parameter]
+    public int IncrementarPor { get; set; } = 1;
+    //no componente Blazor orixinal seguira sumando de 1 en 1
+
+    /// <summary>
+    /// Fora do componente orixinal Blazor sumará segun o numero que lle indiquemos
+    /// </summary>
+    private void IncrementCount()
+    {
+        currentCount += IncrementarPor;
+        //currentCount++;
+    }
+
+    //OnParametersAsync activase cando un parametro se estableza
+    //OnInitializedAsync activase cando inicia o programa
+    protected override Task OnParametersSetAsync()
+    {
+        currentCount = ContaInicial;
+        return Task.CompletedTask;
+    }
+}
